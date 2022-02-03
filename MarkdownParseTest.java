@@ -10,7 +10,7 @@ public class MarkdownParseTest { //defining a class
     @Test
     public void getLinksTest() {
         String testLink1 = "[Link1](Link1.com)";
-        assertEquals("Link1.com", MarkdownParse.getLinks(testLink1));
+        assertEquals("Link1.com", MarkdownParse.getLinks(testLink1).get(0));
     }
 }
 
