@@ -7,21 +7,42 @@ import java.util.ArrayList;
 public class MarkdownParse {
     public static ArrayList<String> getLinks(String markdown) {
         ArrayList<String> toReturn = new ArrayList<>();
+        System.out.println(markdown.length());
+        markdown.replace(" ", "");
+        markdown.replace("\n", "");
         // find the next [, then find the ], then find the (, then take up to
         // the next )
         int currentIndex = 0;
         while(currentIndex < markdown.length()) {
+
             int nextOpenBracket = markdown.indexOf("[", currentIndex);
-            int nextCloseBracket = markdown.indexOf("]", nextOpenBracket);
-            int openParen = markdown.indexOf("(", nextCloseBracket);
-            if(openParen == -1) {break;}
 
-            String closeBracket = markdown.substring(nextCloseBracket+1, nextCloseBracket+2);
-            if (!closeBracket.equals("(")) break;
+            if (nextOpenBracket == -1) {
+                break;
+            }
 
-            int closeParen = markdown.indexOf(")", openParen);
-            if (nextOpenBracket == 0)
-                toReturn.add(markdown.substring(openParen + 1, closeParen));
+            int nextCloseBracketAndOpenParen = markdown.indexOf("](", nextOpenBracket);
+
+            if (nextCloseBracketAndOpenParen == -1) {
+                currentIndex = nextOpenBracket + 1;
+                continue;
+            }
+
+            int closeParen = markdown.indexOf(")", nextCloseBracketAndOpenParen);
+
+            if (closeParen == -1) {
+                break;
+            }
+
+            System.out.println(currentIndex);
+            System.out.println(markdown.indexOf("[", currentIndex));
+            if (markdown.indexOf("[", currentIndex) == 0 ||
+                !markdown.substring(nextOpenBracket - 1, nextOpenBracket).equals("!") ||
+                    !markdown.substring(nextOpenBracket - 1, nextOpenBracket).equals("'")){
+                toReturn.add(markdown.substring(nextCloseBracketAndOpenParen + 2, closeParen));
+                System.out.println(toReturn);
+            }
+
             currentIndex = closeParen + 1;
         }
         return toReturn;
